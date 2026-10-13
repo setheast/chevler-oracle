@@ -1,0 +1,15 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Node (for the Phase 1 scaffold)
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
