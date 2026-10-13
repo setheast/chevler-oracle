@@ -66,6 +66,33 @@ highlighting, confidence badges, recorded override), spec summary chips, utilisa
 **New**: the stepper shell, the delivery/VAT/currency step, the outputs step, the command bar.
 **Retired**: machine parameters on the Cases configure screen (the engine + register supply them).
 
+**Post-founding rulings (13 Oct 2026, decided and shipped in the live sandbox — binding here):**
+
+1. **A saved product is the SPEC only.** Quantities, margins and pricing are never stored on a
+   product — they belong to the quote (recalled from a saved quote). The product code is OPTIONAL
+   at save time (often unknown yet; blank codes never collide; the name stands in until the code
+   exists). Step 0's recall and step 6's prefills follow this split: spec from the product,
+   commercials from the customer's quote/job history.
+2. **The assumption engine proposes what we BUY TODAY, not what history ran.** Mill ("mother")
+   reels carry stock-file liveness (live / dormant / obsolete): the sandbox panel reads "from
+   1040mm mother (now obsolete — live is 1065mm)" and its Use button targets the LIVE reel; the
+   blank guide confirms the mother against the selected grade's live mill reel (Singleproof 90 →
+   the 1065mm FSC line). Oracle's Materials plane therefore needs per-stock liveness, and step 2
+   confirms the mother from the grade, not from a default.
+3. **The historic BOM + routing joins are step 5's autocompletion goldmine** (sandbox
+   production-knowledge §14): TblBOM gives each product's real material (type/colour/gsm, slit
+   width, reel length), its QPA in the estimator's own convention, and — one BOM level up — the
+   mother reel plus the slitting/sheeting waste (2.5% reels / 5% sheets); TblShopOrdHistory gives
+   last-order recency; TblRouting's run factor is output/hr in 1,000s with actual cycles/min =
+   output ÷ 60 ÷ nest (the DB's own TblRoutingsCycleCheck relationship). All extracted and shipped
+   (`similar-products.json`, regenerable by script).
+4. **Oblong Reel Fed blank rule, evidenced from 65 historic BOMs**: blank along the web =
+   D2 + 2·D3 + 6–8mm trim (the QPA driver); the slit WIDTH is die-specific (D1 + 2·D3 plus
+   10–32mm) — the die or a matched historic product supplies the width, the formula supplies the
+   QPA, and the width never changes the QPA. (R13 tracks Stuart's confirmation.)
+5. **Both estimator forms gained a "Clear all"** (fresh-start remount) — carry the affordance into
+   the stepper shell.
+
 ## 3. One cost engine
 
 A pure, tested, zero-I/O module (`engine/` — the sandbox discipline: no Express, no fs, no Date,
@@ -128,13 +155,14 @@ must be resolved (owner named) before the affected family cuts over:
 | R3 | Base labour £19.33 (S7, Mar) vs £20.29 (Lewys, Oct) | unresolved | Lewys |
 | R4 | Efficiency/productivity: 85% assumed vs ~70% observed (v1's OI-1) — and S7's hours assume 85% | adopt v1's `productivity_factor` design; seed from the baseline exercise | Hannah extract → Lewys validate (v1's procedure docs) |
 | R5 | Overhead pots: v1 profile (labour £117,467 / 80,000kg / admin 15.5%) vs sandbox factory params vs S7 pots | rebase from S7 + current accounts at founding; versioned profile | Lewys |
-| R6 | Material prices 539 days old in v1; sandbox catalogue has reconciliation candidates | refresh at founding; dated prices mandatory thereafter | Lewys/purchasing |
+| R6 | Material prices 539 days old in v1; sandbox catalogue has reconciliation candidates | refresh at founding; dated prices mandatory thereafter. **13 Oct:** mill reels also need live/dormant/obsolete status from the stock file — SP 90's historic 1040mm mother is OBSOLETE, the live buy is the 1065mm FSC line; one price-list row per grade hides this | Lewys/purchasing |
 | R7 | Die data: S8 register (385 dies, rated speeds, feed waste, heads) vs v1 harvest tooling-cases.json (612 sizes, 601 unlinked die refs) | S8 is primary; harvest fills gaps; measured webs still to collect | Tim (register owner) |
 | R8 | Speeds: die RATED vs Stuart's quoting bands | rated = Standard, bands warn (decided 12 Oct) — bands maintained as production rules | Stuart |
 | R9 | CHEVS ×(2÷1.5) template quirk vs S7 rate (~12% if it only means crew) | quirk NOT carried into Oracle; crew is explicit | Lewys/Stuart |
-| R10 | Delivery: flat % vs real fulfilment | §11 architecture native; % interim | Seth → PlasPac tariff |
+| R10 | Delivery: flat % vs real fulfilment | §11 architecture native; % interim. **13 Oct — call-off orders are a first-class case** (e.g. 1m/year over ~6 drops, common): a flat % cannot see the drop count, so delivery must price drops × (pallets/drop × zone rate) + storage dwell, with the batching question (one run + storage vs several runs + set-ups) surfaced. v1's harvest carriage seeds (UK £50/pallet, IRE/SCO £65) are the interim per-drop numbers | Seth → PlasPac tariff |
 | R11 | Packing £/kg seeds unconfirmed | carried, flagged | Stuart |
 | R12 | Overhead recovery basis (admin/S&A as value-%) | carried at founding, flagged as the post-delivery follow-up (same critique as §11) | Seth/Lewys |
+| R13 | Oblong RF blank rule: evidenced from 65 historic BOMs (along-web = D2 + 2·D3 + 6–8mm trim; slit width die-specific) but not yet confirmed by production | shipped as the sandbox's rule 13 Oct; confirm | Stuart |
 
 ## 5. What migrates from where
 
@@ -142,8 +170,12 @@ must be resolved (owner named) before the affected family cuts over:
 engine maths and the golden-fixture discipline (as regression oracles); `production-rules` +
 `estimate-checks` (the checks and guides); delivery/Incoterms/export-VAT/live-FX;
 `quote-figures` invariants; blueprint internal PDFs + customer PDFs; audited params stores with
-what-changed history; saved products (status/history/facets/filters); the S8 extracts
-(die register, similar-products routing history, punch dies) and extraction scripts; weights.
+what-changed history; saved products (status/history/facets/filters; spec-only + optional code
+since 13 Oct); the S8 extracts and extraction scripts — die register, punch dies, and the
+similar-products set enriched 13 Oct with each product's BOM material (type/colour/gsm, slit
+width, reel length, QPA, waste), its mother reel + stock-file liveness + today's live mill reel,
+last order + order count, and routing semantics (run factor in 1,000s/hr; cycles = output ÷ 60 ÷
+nest); weights.
 
 **From ERP v1**: the schema designs (§4); route candidacy + comparison + override recording;
 confidence/calibration; the permissions model; the pricing-brief machinery (designed-for);

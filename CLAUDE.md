@@ -57,3 +57,12 @@ The founding documents ARE the requirements — read them before proposing anyth
 Phase 0 (these documents) complete, awaiting Seth's review of the spec's §7 decisions.
 **Phase 1 = the quoting engine** — do not start it until Seth green-lights the review.
 No scaffolding exists yet; the repo is docs-only by design.
+
+**Post-founding spec updates, 13 Oct 2026 (same-day sandbox decisions, folded in for the review):**
+the quoting spec gained §2's "Post-founding rulings" block (saved product = SPEC only with an
+optional code; the assumption engine proposes what we buy TODAY via stock-file liveness; the
+historic BOM/routing joins as step-5 autocompletion; the evidenced oblong RF blank rule; Clear
+all), updates to R6 (material liveness) and R10 (call-off / multi-drop delivery as a first-class
+case), a new R13 (oblong rule confirmation — Stuart), and a refreshed §5 sandbox-migration list
+(enriched similar-products extract). Source detail: the sandbox's `docs/production-knowledge.md`
+§14.
