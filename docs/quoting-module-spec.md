@@ -138,6 +138,24 @@ Full write-up with sources, code to port and open items: `docs/sandbox-handovers
     ONE definition so they cannot drift (the sandbox keeps them in step by hand:
     `quote-workings-screen.ts`).
 
+**Post-founding rulings (15 Oct 2026 — Lewys, finance; binding here).** Write-up:
+`docs/sandbox-handovers/2026-10-15.md`; detail in the sandbox's `production-knowledge.md` §17.
+
+15. **Base labour is £20.29/hr** (fully loaded grade 3, with Lewys's headroom), not S7's £19.33;
+    other grades (£25.69, £23.91) still to confirm.
+16. **CHEVS crew includes a shared packer** (one per three Chevlers) — the ×(2÷1.5) is real crew,
+    so Oracle's explicit crew for a CHEVS station must include it.
+17. **One efficiency per machine, from the productivity reports / timesheets** (10RF ≈ 93%) —
+    the single productivity factor replaces the model's 85% and the quotes' 75%.
+18. **S&A stays 15.5%; its recovery method is open** — machine-hour rates (Lewys) vs a fixed
+    per-order charge + small value-linked % (Seth). Both agree a flat % overcharges big jobs.
+19. **Delivery line = PlasPac rate cards (pallets × zone) + ~15% margin**; the 4.5% pot also
+    holds storage, dispatch, rebates and charged shipments, which need a home when it retires.
+20. **A bad-debt allowance of £50k/year** is a named parameter (sandbox: 0.74% of price),
+    deducted in NP, excluded from legacy baselines.
+21. **Every pricing change is watched against a frozen legacy baseline** — the per-quote drift
+    view (sandbox "Compare with workbook price") carries into parallel running (§6).
+
 ## 3. One cost engine
 
 A pure, tested, zero-I/O module (`engine/` — the sandbox discipline: no Express, no fs, no Date,
@@ -196,18 +214,18 @@ must be resolved (owner named) before the affected family cuts over:
 
 | # | Conflict | Position at founding | Owner / gate |
 |---|---|---|---|
-| R1 | Machine hourly rates: ERP v1 seeds = pre-S7 carriage-INCLUSIVE (LITHO 46.83, WIDE-REELER 71.11, formers flat 40.64 — the misapplied RF1–7 rate) vs **S7 carriage-stripped per-machine** (RF1–7 36.98, 8/10/11REEL 77.41, 9REEL 104.72, Wide 58.30, Narrow 51.17…) | **S7 stripped is the truth** (fulfilment is per-job, never in the hour) | Lewys cross-check; Stuart Q2 reply. **14 Oct:** Stuart's own YF855 quote reproduces to the penny at the OLD 8REEL £61.90 — at S7 £77.41 it is +7–8%; and with 8RF dismantled, 10RF absorbs its hours (the 8REEL rate assumed only 1,377 h/yr, so it is volume-sensitive) — re-model |
-| R2 | 11REEL has no modelled rate | 8REEL-class proxy, flagged | Lewys to model |
-| R3 | Base labour £19.33 (S7, Mar) vs £20.29 (Lewys, Oct) | unresolved | Lewys |
-| R4 | Efficiency/productivity: 85% assumed vs ~70% observed (v1's OI-1) — and S7's hours assume 85% | adopt v1's `productivity_factor` design; seed from the baseline exercise | Hannah extract → Lewys validate (v1's procedure docs) |
+| R1 | Machine hourly rates: ERP v1 seeds = pre-S7 carriage-INCLUSIVE (LITHO 46.83, WIDE-REELER 71.11, formers flat 40.64 — the misapplied RF1–7 rate) vs **S7 carriage-stripped per-machine** (RF1–7 36.98, 8/10/11REEL 77.41, 9REEL 104.72, Wide 58.30, Narrow 51.17…) | **S7 stripped is the truth** (fulfilment is per-job, never in the hour) | Lewys cross-check; Stuart Q2 reply. **14 Oct:** Stuart's own YF855 quote reproduces to the penny at the OLD 8REEL £61.90 — at S7 £77.41 it is +7–8%; and with 8RF dismantled, 10RF absorbs its hours (the 8REEL rate assumed only 1,377 h/yr, so it is volume-sensitive) — re-model. **15 Oct:** Lewys — review running hours across ALL machines and current shift patterns/FTE before re-rating; rates refresh from next year's budget once accepted |
+| R2 | 11REEL has no modelled rate (bought this financial year) | 8REEL-class proxy, flagged — Lewys thinks the stand-in may be 9REEL; checking | Lewys to model |
+| R3 | Base labour £19.33 (S7, Mar) vs £20.29 (Lewys, Oct) | **RESOLVED 15 Oct: £20.29** (other grades £25.69/£23.91 to confirm) | Lewys |
+| R4 | Efficiency/productivity: 85% assumed vs ~70% observed (v1's OI-1) — and S7's hours assume 85% | adopt v1's `productivity_factor` design; seed from the baseline exercise. **15 Oct (Lewys):** ONE efficiency per machine, from the productivity reports/timesheets (9 months; 10RF ≈ 93%) — replaces both the 85% and the quotes' 75% | Hannah extract → Lewys validate (v1's procedure docs) |
 | R5 | Overhead pots: v1 profile (labour £117,467 / 80,000kg / admin 15.5%) vs sandbox factory params vs S7 pots | rebase from S7 + current accounts at founding; versioned profile | Lewys |
 | R6 | Material prices 539 days old in v1; sandbox catalogue has reconciliation candidates | refresh at founding; dated prices mandatory thereafter. **13 Oct:** mill reels also need live/dormant/obsolete status from the stock file — SP 90's historic 1040mm mother is OBSOLETE, the live buy is the 1065mm FSC line; one price-list row per grade hides this | Lewys/purchasing |
 | R7 | Die data: S8 register (385 dies, rated speeds, feed waste, heads) vs v1 harvest tooling-cases.json (612 sizes, 601 unlinked die refs) | S8 is primary; harvest fills gaps; measured webs still to collect | Tim (register owner) |
 | R8 | Speeds: die RATED vs Stuart's quoting bands | rated = Standard, bands warn (decided 12 Oct) — bands maintained as production rules. **14 Oct:** rated speeds from Access proved unreliable (R14) — rated stays a Standard only once verified | Stuart |
-| R9 | CHEVS ×(2÷1.5) template quirk vs S7 rate (~12% if it only means crew) | quirk NOT carried into Oracle; crew is explicit | Lewys/Stuart |
-| R10 | Delivery: flat % vs real fulfilment | §11 architecture native; % interim. **13 Oct — call-off orders are a first-class case** (e.g. 1m/year over ~6 drops, common): a flat % cannot see the drop count, so delivery must price drops × (pallets/drop × zone rate) + storage dwell, with the batching question (one run + storage vs several runs + set-ups) surfaced. v1's harvest carriage seeds (UK £50/pallet, IRE/SCO £65) are the interim per-drop numbers. **14 Oct:** pallet builds now known for 3,203 products via the carton (ruling 7); ~3,450 (mostly sheets) still need one (R15) | Seth → PlasPac tariff |
+| R9 | CHEVS ×(2÷1.5) template quirk vs S7 rate (~12% if it only means crew) | **RESOLVED 15 Oct (Lewys): the uplift is real crew** — one packer serves three Chevlers; Oracle's explicit CHEVS crew includes it (the quirk itself is not carried) | Lewys/Stuart |
+| R10 | Delivery: flat % vs real fulfilment | §11 architecture native; % interim. **13 Oct — call-off orders are a first-class case** (e.g. 1m/year over ~6 drops, common): a flat % cannot see the drop count, so delivery must price drops × (pallets/drop × zone rate) + storage dwell, with the batching question (one run + storage vs several runs + set-ups) surfaced. v1's harvest carriage seeds (UK £50/pallet, IRE/SCO £65) are the interim per-drop numbers. **14 Oct:** pallet builds now known for 3,203 products via the carton (ruling 7); ~3,450 (mostly sheets) still need one (R15). **15 Oct (Lewys):** agreed — PlasPac rate cards + ~15% delivery margin; the 4.5% pot also covers storage, dispatch, rebates and charged shipments | Seth → PlasPac tariff |
 | R11 | Packing £/kg seeds unconfirmed | carried, flagged | Stuart |
-| R12 | Overhead recovery basis (admin/S&A as value-%) | carried at founding, flagged as the post-delivery follow-up (same critique as §11). **15 Oct:** on Stuart's YF855 the 1m order carries £612 of S&A vs £95 on the 100k — 6.5× for one order each; proposal to Lewys: per-order costs → a fixed per-order charge, truly value-linked costs (credit insurance, bad debt, commission) stay a small %, delivery → its own line; also reconcile S&A 15.5% (templates) vs 14.1% + 7.7% margin of safety (S7) | Seth/Lewys |
+| R12 | Overhead recovery basis (admin/S&A as value-%) | carried at founding, flagged as the post-delivery follow-up (same critique as §11). **15 Oct:** on Stuart's YF855 the 1m order carries £612 of S&A vs £95 on the 100k — 6.5× for one order each; proposal to Lewys: per-order costs → a fixed per-order charge, truly value-linked costs (credit insurance, bad debt, commission) stay a small %, delivery → its own line; also reconcile S&A 15.5% (templates) vs 14.1% + 7.7% margin of safety (S7). **15 Oct (Lewys):** 15.5% stays (reforecast 15.6%); method open — machine-hour rates (Lewys) vs per-order + small value-linked % (Seth); a £50k/yr bad-debt allowance added as its own named parameter | Seth/Lewys |
 | R13 | Oblong RF blank rule: evidenced from 65 historic BOMs (along-web = D2 + 2·D3 + 6–8mm trim) and, 14 Oct, the slit width = mother ÷ lanes of (D1 + 2·D3 + ≥10mm) — 49/61 products — but not yet confirmed by production | shipped in the sandbox 13–14 Oct; confirm both and the 10mm minimum | Stuart |
 | R14 | Speeds from Access (die rated cycles, work-centre defaults, routing run factors) are unreliable — WBIG03's 6-7REEL die said 4/min, now 12 | every imported speed starts **unverified** (confidence system); verify machine by machine; route recommendations show the speed they rest on | Stuart / production |
 | R15 | Pallet builds missing for ~3,450 products (no carton build — mostly sheets) | ask production / PlasPac for those only, not the whole range | Seth / production |

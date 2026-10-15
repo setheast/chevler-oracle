@@ -76,6 +76,12 @@ notes on products, the screen-order internal blueprint. §3's material line foll
 staggered-web rule; R1/R8/R10/R12/R13 updated; new R14 (unverified speeds), R15 (missing pallet
 builds), R16 (retire 8REEL); §5's migration list gained the 14 Oct modules and extract fields.
 
+**Post-founding spec updates, 15 Oct 2026** (Lewys's finance meeting): §2 rulings 15–21 — base
+labour £20.29, CHEVS crew includes a shared packer, one efficiency per machine from the
+productivity reports, S&A 15.5% with the recovery method open, the delivery line at PlasPac
+rates + ~15%, a £50k/yr bad-debt allowance, and every pricing change watched against a frozen
+legacy baseline. R3 and R9 resolved; R1, R2, R4, R10 and R12 updated.
+
 **Sandbox hand-overs:** the sandbox writes `docs/oracle-handover-YYYY-MM-DD.md` after any day
 that changes a rule; each is copied here into `docs/sandbox-handovers/YYYY-MM-DD.md` and folded
 into the spec (rulings block, R-register, §5) in the same commit. At session start, check the
