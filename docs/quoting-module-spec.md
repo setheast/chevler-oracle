@@ -87,11 +87,56 @@ highlighting, confidence badges, recorded override), spec summary chips, utilisa
    output ÷ 60 ÷ nest (the DB's own TblRoutingsCycleCheck relationship). All extracted and shipped
    (`similar-products.json`, regenerable by script).
 4. **Oblong Reel Fed blank rule, evidenced from 65 historic BOMs**: blank along the web =
-   D2 + 2·D3 + 6–8mm trim (the QPA driver); the slit WIDTH is die-specific (D1 + 2·D3 plus
-   10–32mm) — the die or a matched historic product supplies the width, the formula supplies the
+   D2 + 2·D3 + 6–8mm trim (the QPA driver); ~~the slit WIDTH is die-specific (D1 + 2·D3 plus
+   10–32mm) — the die or a matched historic product supplies the width~~ **[width superseded
+   14 Oct — ruling 10 below: it comes from the mother reel]**, the formula supplies the
    QPA, and the width never changes the QPA. (R13 tracks Stuart's confirmation.)
 5. **Both estimator forms gained a "Clear all"** (fresh-start remount) — carry the affordance into
    the stepper shell.
+
+**Post-founding rulings (14 Oct 2026, decided and shipped in the live sandbox — binding here).**
+Full write-up with sources, code to port and open items: `docs/sandbox-handovers/2026-10-14.md`
+(copy of the sandbox's `docs/oracle-handover-2026-10-14.md`); production detail in the sandbox's
+`docs/production-knowledge.md` §§15–16.
+
+6. **The Access record is the product master.** Any of the 6,659 Access products is searchable and
+   loads into the quote as a **Draft** with every assumption shown as a note (sandbox: 2,015 of
+   2,026 cases/wraps load; 1,665 fully pre-filled). Paper resolves by stock code → its mill-reel
+   (BOM parent) code → a type/colour name table — the table and the template rules are ADMIN DATA
+   here, not code. Step 0 searches products AND the Access master; Products gain an import-as-Draft
+   path. Sheets/discs/liners/reels were not yet mapped in the sandbox (wider material gap).
+7. **The pallet build lives on the outer CARTON, not the product.** `TblProductCode`'s Units/Layer ×
+   Layers is a legacy pair (~140 products); the real build is the carton's `TblMaterials` UK/EU
+   Units/Layer × Layers, reached through the BOM (3,203 products). **Carton is an entity** (code,
+   outer code, flute, colour, W×L×D, UK + EU builds); products link to it. Pallets per job =
+   packs ÷ packs per pallet — the input R10's per-job delivery needs.
+8. **A product is not tied to a route.** WBIG03 ran VP-16 from cut sheets but is ~30% cheaper on
+   6REEL from a slit reel at a realistic speed. The sandbox moves a job between route templates by
+   hand (`route-move.ts`: machine → route, the product-vs-route split of inputs) and records both
+   routes' prices on the quote. Here this is native: every capable route priced and compared
+   (§3 "candidate routes" + v1's RouteComparisonPanel), cheapest recommended, override recorded.
+9. **Multi-head reel-fed dies cut STAGGERED (Stuart).** One slit reel feeds every head: piece width
+   = the die's web (YF855: 263mm for a 133mm blank on 2 heads) and **QPA = blank ÷ heads ÷ reel
+   metres**. The earlier per-lane reading (web ÷ heads, QPA ÷ reel only) gave the same weight but
+   half the MOQ and not the reel actually bought. §3's material line follows this.
+10. **Oblong slit width comes from the MOTHER reel**, like round cases: lanes = floor(mother ÷
+    (D1 + 2·D3 + 10mm minimum spare)); width = floor(mother ÷ lanes). 49 of 61 oblong reel-fed
+    products match to 1mm (86% of their orders); the minimum spare is a parameter. (R13.)
+11. **8RF is dismantled — everything runs on 10RF at the same costs (Stuart).** Retire 8REEL as a
+    work centre; migrate its dies, routings and order notes to 10REEL (R16).
+12. **Speeds from Access are unverified** (Seth: "the default machine speeds are all wrong"): the
+    WBIG03 6-7REEL die was recorded at 4/min (copied from its VP-16 die; now 12 on live). Every
+    imported speed carries a confidence level and starts unverified (R14). Speed decides route
+    choice (WBIG03: +11% at 4/min, −30% at 12/min).
+13. **Products carry production notes** (`orderNotes`, 2,638 products — e.g. "MUST ONLY RUN ON 8RF",
+    machine set-ups like "Speed 9, Heaters 4-4, Plunger 5"): typed (spec / set-up / customer) and
+    shown on quotes, jobs and works orders.
+14. **The internal quote lists every field and guide in screen order** (blank & reel guide, QPA
+    working, speed steer, standard vs used, die, tooling/origination workings, layout cards,
+    cheaper configurations, quote-time snapshots of advisory panels, the route move, a catch-all
+    so no stored input is dropped). Here the form layout and the record layout should come from
+    ONE definition so they cannot drift (the sandbox keeps them in step by hand:
+    `quote-workings-screen.ts`).
 
 ## 3. One cost engine
 
@@ -109,7 +154,8 @@ spec
                                rate = the machine's S7 carriage-stripped £/hr (machine + labour,
                                crew-aware); setup = die-change/setup standards × MR rate;
                                waste applied per step, named (startup, running, trim, material)
- → material                    grade → width (per-lane/web maths from the die) → dated preferred
+ → material                    grade → width (the die's web — one staggered reel feeds all heads;
+                               QPA = blank ÷ heads ÷ reel m; else mother ÷ lanes) → dated preferred
                                price; weight = the single source for packing/delivery/logistics
  → packing                     real quantities when known, £/kg basis otherwise
  → overheads                   named pots recovered on a declared basis (see §4 — NOT silently
@@ -150,19 +196,22 @@ must be resolved (owner named) before the affected family cuts over:
 
 | # | Conflict | Position at founding | Owner / gate |
 |---|---|---|---|
-| R1 | Machine hourly rates: ERP v1 seeds = pre-S7 carriage-INCLUSIVE (LITHO 46.83, WIDE-REELER 71.11, formers flat 40.64 — the misapplied RF1–7 rate) vs **S7 carriage-stripped per-machine** (RF1–7 36.98, 8/10/11REEL 77.41, 9REEL 104.72, Wide 58.30, Narrow 51.17…) | **S7 stripped is the truth** (fulfilment is per-job, never in the hour) | Lewys cross-check; Stuart Q2 reply |
+| R1 | Machine hourly rates: ERP v1 seeds = pre-S7 carriage-INCLUSIVE (LITHO 46.83, WIDE-REELER 71.11, formers flat 40.64 — the misapplied RF1–7 rate) vs **S7 carriage-stripped per-machine** (RF1–7 36.98, 8/10/11REEL 77.41, 9REEL 104.72, Wide 58.30, Narrow 51.17…) | **S7 stripped is the truth** (fulfilment is per-job, never in the hour) | Lewys cross-check; Stuart Q2 reply. **14 Oct:** Stuart's own YF855 quote reproduces to the penny at the OLD 8REEL £61.90 — at S7 £77.41 it is +7–8%; and with 8RF dismantled, 10RF absorbs its hours (the 8REEL rate assumed only 1,377 h/yr, so it is volume-sensitive) — re-model |
 | R2 | 11REEL has no modelled rate | 8REEL-class proxy, flagged | Lewys to model |
 | R3 | Base labour £19.33 (S7, Mar) vs £20.29 (Lewys, Oct) | unresolved | Lewys |
 | R4 | Efficiency/productivity: 85% assumed vs ~70% observed (v1's OI-1) — and S7's hours assume 85% | adopt v1's `productivity_factor` design; seed from the baseline exercise | Hannah extract → Lewys validate (v1's procedure docs) |
 | R5 | Overhead pots: v1 profile (labour £117,467 / 80,000kg / admin 15.5%) vs sandbox factory params vs S7 pots | rebase from S7 + current accounts at founding; versioned profile | Lewys |
 | R6 | Material prices 539 days old in v1; sandbox catalogue has reconciliation candidates | refresh at founding; dated prices mandatory thereafter. **13 Oct:** mill reels also need live/dormant/obsolete status from the stock file — SP 90's historic 1040mm mother is OBSOLETE, the live buy is the 1065mm FSC line; one price-list row per grade hides this | Lewys/purchasing |
 | R7 | Die data: S8 register (385 dies, rated speeds, feed waste, heads) vs v1 harvest tooling-cases.json (612 sizes, 601 unlinked die refs) | S8 is primary; harvest fills gaps; measured webs still to collect | Tim (register owner) |
-| R8 | Speeds: die RATED vs Stuart's quoting bands | rated = Standard, bands warn (decided 12 Oct) — bands maintained as production rules | Stuart |
+| R8 | Speeds: die RATED vs Stuart's quoting bands | rated = Standard, bands warn (decided 12 Oct) — bands maintained as production rules. **14 Oct:** rated speeds from Access proved unreliable (R14) — rated stays a Standard only once verified | Stuart |
 | R9 | CHEVS ×(2÷1.5) template quirk vs S7 rate (~12% if it only means crew) | quirk NOT carried into Oracle; crew is explicit | Lewys/Stuart |
-| R10 | Delivery: flat % vs real fulfilment | §11 architecture native; % interim. **13 Oct — call-off orders are a first-class case** (e.g. 1m/year over ~6 drops, common): a flat % cannot see the drop count, so delivery must price drops × (pallets/drop × zone rate) + storage dwell, with the batching question (one run + storage vs several runs + set-ups) surfaced. v1's harvest carriage seeds (UK £50/pallet, IRE/SCO £65) are the interim per-drop numbers | Seth → PlasPac tariff |
+| R10 | Delivery: flat % vs real fulfilment | §11 architecture native; % interim. **13 Oct — call-off orders are a first-class case** (e.g. 1m/year over ~6 drops, common): a flat % cannot see the drop count, so delivery must price drops × (pallets/drop × zone rate) + storage dwell, with the batching question (one run + storage vs several runs + set-ups) surfaced. v1's harvest carriage seeds (UK £50/pallet, IRE/SCO £65) are the interim per-drop numbers. **14 Oct:** pallet builds now known for 3,203 products via the carton (ruling 7); ~3,450 (mostly sheets) still need one (R15) | Seth → PlasPac tariff |
 | R11 | Packing £/kg seeds unconfirmed | carried, flagged | Stuart |
-| R12 | Overhead recovery basis (admin/S&A as value-%) | carried at founding, flagged as the post-delivery follow-up (same critique as §11) | Seth/Lewys |
-| R13 | Oblong RF blank rule: evidenced from 65 historic BOMs (along-web = D2 + 2·D3 + 6–8mm trim; slit width die-specific) but not yet confirmed by production | shipped as the sandbox's rule 13 Oct; confirm | Stuart |
+| R12 | Overhead recovery basis (admin/S&A as value-%) | carried at founding, flagged as the post-delivery follow-up (same critique as §11). **15 Oct:** on Stuart's YF855 the 1m order carries £612 of S&A vs £95 on the 100k — 6.5× for one order each; proposal to Lewys: per-order costs → a fixed per-order charge, truly value-linked costs (credit insurance, bad debt, commission) stay a small %, delivery → its own line; also reconcile S&A 15.5% (templates) vs 14.1% + 7.7% margin of safety (S7) | Seth/Lewys |
+| R13 | Oblong RF blank rule: evidenced from 65 historic BOMs (along-web = D2 + 2·D3 + 6–8mm trim) and, 14 Oct, the slit width = mother ÷ lanes of (D1 + 2·D3 + ≥10mm) — 49/61 products — but not yet confirmed by production | shipped in the sandbox 13–14 Oct; confirm both and the 10mm minimum | Stuart |
+| R14 | Speeds from Access (die rated cycles, work-centre defaults, routing run factors) are unreliable — WBIG03's 6-7REEL die said 4/min, now 12 | every imported speed starts **unverified** (confidence system); verify machine by machine; route recommendations show the speed they rest on | Stuart / production |
+| R15 | Pallet builds missing for ~3,450 products (no carton build — mostly sheets) | ask production / PlasPac for those only, not the whole range | Seth / production |
+| R16 | 8RF dismantled; 26 Access order notes and historic routings/dies still name it | retire 8REEL; migrate dies, routings and notes to 10REEL at import | Seth / Stuart |
 
 ## 5. What migrates from where
 
@@ -175,7 +224,12 @@ since 13 Oct); the S8 extracts and extraction scripts — die register, punch di
 similar-products set enriched 13 Oct with each product's BOM material (type/colour/gsm, slit
 width, reel length, QPA, waste), its mother reel + stock-file liveness + today's live mill reel,
 last order + order count, and routing semantics (run factor in 1,000s/hr; cycles = output ÷ 60 ÷
-nest); weights.
+nest); weights. **Added 14 Oct:** `access-product-map.ts` (Access product → quote inputs as a
+Draft, with notes), `route-move.ts` (machine → route; product vs route inputs), the staggered-head
+and oblong-slit rules in `estimate-checks.ts` / `production-rules.ts` (`reelHeads`,
+`OBLONG_SLIT_MIN_SPARE_MM`), `quote-workings-screen.ts` (the screen-order internal blueprint), and
+the extract's new fields — `carton` + pallet build, `packQty`, `material.printType`,
+`material.motherCode`, `orderNotes`.
 
 **From ERP v1**: the schema designs (§4); route candidacy + comparison + override recording;
 confidence/calibration; the permissions model; the pricing-brief machinery (designed-for);

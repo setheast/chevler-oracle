@@ -27,9 +27,9 @@ The founding documents ARE the requirements — read them before proposing anyth
 ## The three sibling sources (read-only from here)
 | Where | What it is | Rule |
 |---|---|---|
-| `/Users/sjr/dev/Claude/chevler-pricing-calculator` (github setheast/chevler-pricing-calculator) | the LIVE estimator suite (production, used daily) — also the requirements record (`CLAUDE.md`, `docs/production-knowledge.md` = production-rules source of record, `docs/estimator-build-pack/`) and the regression oracle (855 tests, golden fixtures, S8 extracts in `server/access-extract/`) | stays live; Oracle never breaks it; port code FROM it freely |
-| `/Users/sjr/dev/Claude/chevler-erp-main` (github setheast/chevler-erp) | ERP v1 — parts donor only. NOTE: the local folder is a 22 Sep snapshot with no .git; re-verify against the live head (harvest report §6) before relying on details | no new work there, ever |
-| Google Drive `/Chevler/` + `Manufacturing.accdb` (OneDrive Temp) | S7 = the Lewys 25-26 cost model (machine-rate truth, carriage-stripped); S8 = the production Access DB (die register, routings, product master) — extraction scripts live in the sandbox's `scripts/` | data sources; refresh via the scripts |
+| `/Users/sjr/dev/Claude/chevler-pricing-calculator` (Mac) · `C:\dev\chevler-pricing-calculator` (Windows) — github setheast/chevler-pricing-calculator | the LIVE estimator suite (production, used daily) — also the requirements record (`CLAUDE.md`, `docs/production-knowledge.md` = production-rules source of record, `docs/estimator-build-pack/`) and the regression oracle (855 tests, golden fixtures, S8 extracts in `server/access-extract/`) | stays live; Oracle never breaks it; port code FROM it freely |
+| `/Users/sjr/dev/Claude/chevler-erp-main` (Mac) · `C:\dev\chevler-erp` (Windows, a real clone; the OneDrive `Claude Code\chevler-erp` folder is a stale non-git copy) — github setheast/chevler-erp | ERP v1 — parts donor only. NOTE: the local folder is a 22 Sep snapshot with no .git; re-verify against the live head (harvest report §6) before relying on details | no new work there, ever |
+| Google Drive `/Chevler/` + `Manufacturing.accdb` (OneDrive `Chevler\Temp`; live copy on the RDS server) | S7 = the Lewys 25-26 cost model (machine-rate truth, carriage-stripped); S8 = the production Access DB (die register, routings, product master) — extraction scripts live in the sandbox's `scripts/` | data sources; refresh via the scripts |
 
 ## Doctrine (non-negotiable; full text in the vision doc)
 1. **Truth-first** — legacy prices are reference oracles, never acceptance targets; every parameter
@@ -66,3 +66,17 @@ all), updates to R6 (material liveness) and R10 (call-off / multi-drop delivery 
 case), a new R13 (oblong rule confirmation — Stuart), and a refreshed §5 sandbox-migration list
 (enriched similar-products extract). Source detail: the sandbox's `docs/production-knowledge.md`
 §14.
+
+**Post-founding spec updates, 14 Oct 2026** (first day this repo was also cloned on the Windows
+machine, at `C:\dev\chevler-oracle-main`): §2 gained "Post-founding rulings (14 Oct)" 6–14 —
+the Access record as product master (load as Draft), the CARTON entity holding pallet builds,
+products not tied to routes, staggered multi-head dies (QPA ÷ heads), oblong slit width from the
+mother reel (supersedes 13 Oct's "die-specific"), 8RF → 10RF, Access speeds unverified, production
+notes on products, the screen-order internal blueprint. §3's material line follows the
+staggered-web rule; R1/R8/R10/R12/R13 updated; new R14 (unverified speeds), R15 (missing pallet
+builds), R16 (retire 8REEL); §5's migration list gained the 14 Oct modules and extract fields.
+
+**Sandbox hand-overs:** the sandbox writes `docs/oracle-handover-YYYY-MM-DD.md` after any day
+that changes a rule; each is copied here into `docs/sandbox-handovers/YYYY-MM-DD.md` and folded
+into the spec (rulings block, R-register, §5) in the same commit. At session start, check the
+sandbox for hand-overs newer than the latest copy here.
