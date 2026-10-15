@@ -151,7 +151,7 @@ Full write-up with sources, code to port and open items: `docs/sandbox-handovers
     per-order charge + small value-linked % (Seth). Both agree a flat % overcharges big jobs.
 19. **Delivery line = PlasPac rate cards (pallets × zone) + ~15% margin**; the 4.5% pot also
     holds storage, dispatch, rebates and charged shipments, which need a home when it retires.
-20. **A bad-debt allowance of £50k/year** is a named parameter (sandbox: 0.74% of price),
+20. **A bad-debt allowance of £50k/year** is a named parameter (sandbox: 0.82% of price = £50k ÷ £6.1M forecast sales),
     deducted in NP, excluded from legacy baselines.
 21. **Every pricing change is watched against a frozen legacy baseline** — the per-quote drift
     view (sandbox "Compare with workbook price") carries into parallel running (§6).
