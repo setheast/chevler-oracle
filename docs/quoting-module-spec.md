@@ -156,6 +156,36 @@ Full write-up with sources, code to port and open items: `docs/sandbox-handovers
 21. **Every pricing change is watched against a frozen legacy baseline** — the per-quote drift
     view (sandbox "Compare with workbook price") carries into parallel running (§6).
 
+**Post-founding rulings (16–26 Oct 2026 — Seth, Lewys, James, Stuart's S9 list; binding here).**
+Write-up: `docs/sandbox-handovers/2026-10-26.md`; detail in the sandbox's `production-knowledge.md`
+§19–§21.
+
+22. **Engineering is inside the machine-hour rate — no engineer premium anywhere** (Lewys): make-ready
+    is costed at the machine's own rate. The workbook's machine + £29.50 engineer make-ready is
+    superseded (R17).
+23. **Crew by head count**: twin head = ONE packer, three heads = TWO (3-head running is normally
+    counter-productive). 9REEL is a triple head (2 operators); 10/11REEL are twin-head Snyders.
+    Machines carry heads + crew explicitly; crew follows the head configuration fitted.
+24. **No finance on any reel-fed machine; depreciation belongs in the rate.** Only the flow wrapper
+    carries finance.
+25. **Machine rates are a CALCULATION, not typed numbers**: budget line × recovery share (per-machine
+    drivers — m², running hours, kWh, crew, history split) ÷ running hours + crew × base labour, held
+    in the calibration module from Lewys's budget table (R18). Each recovery basis is an explicit,
+    owned choice (several are historical: general hands on reel formers only, depreciation on space,
+    "history" splits, site expenses on unmeasured waste tonnage).
+26. **Idle capacity is a pricing-policy question, not a rate**: 11REEL (idle since its customer was
+    lost) shows full absorption overpricing exactly the work one would load onto spare capacity.
+    Decide with Lewys how quotes price onto an idle machine.
+27. **Historical machines** (VP-16 decommissioned; 8RF dismantled) keep their rates for re-pricing
+    old quotes but are never routable; quotes on them raise an advisory check.
+28. **Tools carry a data-confidence level; reference tools prove existence only.** A die known only
+    from a low-confidence list (Stuart's 2013 crimped-case catalogue, 491 sizes) is searchable but can
+    never be fitted or drive a routing until enriched (fits-machines, heads, cycles). A blank
+    fits-machines must never mean "fits any" for such a tool.
+29. **Resilience**: daily backups and continued access if the internet goes down are requirements
+    (today's on-premises server provides both). One estimator, one source of truth replacing Access
+    + Excel + the three calculators.
+
 ## 3. One cost engine
 
 A pure, tested, zero-I/O module (`engine/` — the sandbox discipline: no Express, no fs, no Date,
@@ -214,13 +244,13 @@ must be resolved (owner named) before the affected family cuts over:
 
 | # | Conflict | Position at founding | Owner / gate |
 |---|---|---|---|
-| R1 | Machine hourly rates: ERP v1 seeds = pre-S7 carriage-INCLUSIVE (LITHO 46.83, WIDE-REELER 71.11, formers flat 40.64 — the misapplied RF1–7 rate) vs **S7 carriage-stripped per-machine** (RF1–7 36.98, 8/10/11REEL 77.41, 9REEL 104.72, Wide 58.30, Narrow 51.17…) | **S7 stripped is the truth** (fulfilment is per-job, never in the hour) | Lewys cross-check; Stuart Q2 reply. **14 Oct:** Stuart's own YF855 quote reproduces to the penny at the OLD 8REEL £61.90 — at S7 £77.41 it is +7–8%; and with 8RF dismantled, 10RF absorbs its hours (the 8REEL rate assumed only 1,377 h/yr, so it is volume-sensitive) — re-model. **15 Oct:** Lewys — review running hours across ALL machines and current shift patterns/FTE before re-rating; rates refresh from next year's budget once accepted |
-| R2 | 11REEL has no modelled rate (bought this financial year) | 8REEL-class proxy, flagged — Lewys thinks the stand-in may be 9REEL; checking | Lewys to model |
+| R1 | Machine hourly rates: ERP v1 seeds = pre-S7 carriage-INCLUSIVE (LITHO 46.83, WIDE-REELER 71.11, formers flat 40.64 — the misapplied RF1–7 rate) vs **S7 carriage-stripped per-machine** (RF1–7 36.98, 8/10/11REEL 77.41, 9REEL 104.72, Wide 58.30, Narrow 51.17…) | **S7 stripped is the truth** (fulfilment is per-job, never in the hour) | Lewys cross-check; Stuart Q2 reply. **14 Oct:** Stuart's own YF855 quote reproduces to the penny at the OLD 8REEL £61.90 — at S7 £77.41 it is +7–8%; and with 8RF dismantled, 10RF absorbs its hours (the 8REEL rate assumed only 1,377 h/yr, so it is volume-sensitive) — re-model. **15 Oct:** Lewys — review running hours across ALL machines and current shift patterns/FTE before re-rating; rates refresh from next year's budget once accepted. **26 Oct:** Lewys agrees 10/11REEL are too high (allocation, not data); he rebuilds after the redundancy costs are confirmed, adding 10 + 11 and dropping 8; budget table received (R18) |
+| R2 | 11REEL has no modelled rate (bought this financial year) | 8REEL-class proxy, flagged — Lewys thinks the stand-in may be 9REEL; checking. **23–26 Oct:** proxy agreed too high (Seth + Lewys); 11REEL idle since its customer was lost (ruling 26); 9REEL is a triple head so not a like-for-like stand-in; twin head = 1 operator | Lewys to model (drivers, R18) |
 | R3 | Base labour £19.33 (S7, Mar) vs £20.29 (Lewys, Oct) | **RESOLVED 15 Oct: £20.29** (other grades £25.69/£23.91 to confirm) | Lewys |
 | R4 | Efficiency/productivity: 85% assumed vs ~70% observed (v1's OI-1) — and S7's hours assume 85% | adopt v1's `productivity_factor` design; seed from the baseline exercise. **15 Oct (Lewys):** ONE efficiency per machine, from the productivity reports/timesheets (9 months; 10RF ≈ 93%) — replaces both the 85% and the quotes' 75% | Hannah extract → Lewys validate (v1's procedure docs) |
 | R5 | Overhead pots: v1 profile (labour £117,467 / 80,000kg / admin 15.5%) vs sandbox factory params vs S7 pots | rebase from S7 + current accounts at founding; versioned profile | Lewys |
 | R6 | Material prices 539 days old in v1; sandbox catalogue has reconciliation candidates | refresh at founding; dated prices mandatory thereafter. **13 Oct:** mill reels also need live/dormant/obsolete status from the stock file — SP 90's historic 1040mm mother is OBSOLETE, the live buy is the 1065mm FSC line; one price-list row per grade hides this | Lewys/purchasing |
-| R7 | Die data: S8 register (385 dies, rated speeds, feed waste, heads) vs v1 harvest tooling-cases.json (612 sizes, 601 unlinked die refs) | S8 is primary; harvest fills gaps; measured webs still to collect | Tim (register owner) |
+| R7 | Die data: S8 register (385 dies, rated speeds, feed waste, heads) vs v1 harvest tooling-cases.json (612 sizes, 601 unlinked die refs) | S8 is primary; harvest fills gaps; measured webs still to collect. **23 Oct:** S9 = Stuart's 2013 crimped-case catalogue (491 sizes, no die refs/heads/speeds) imported in the sandbox as reference-only dies (ruling 28) — 325 new sizes + 17 probable second dies on another machine family; conflicts and conditions (lost / toothless / cannibalised / not commissioned) with Stuart | Tim (register owner); Stuart (S9 questions) |
 | R8 | Speeds: die RATED vs Stuart's quoting bands | rated = Standard, bands warn (decided 12 Oct) — bands maintained as production rules. **14 Oct:** rated speeds from Access proved unreliable (R14) — rated stays a Standard only once verified | Stuart |
 | R9 | CHEVS ×(2÷1.5) template quirk vs S7 rate (~12% if it only means crew) | **RESOLVED 15 Oct (Lewys): the uplift is real crew** — one packer serves three Chevlers; Oracle's explicit CHEVS crew includes it (the quirk itself is not carried) | Lewys/Stuart |
 | R10 | Delivery: flat % vs real fulfilment | §11 architecture native; % interim. **13 Oct — call-off orders are a first-class case** (e.g. 1m/year over ~6 drops, common): a flat % cannot see the drop count, so delivery must price drops × (pallets/drop × zone rate) + storage dwell, with the batching question (one run + storage vs several runs + set-ups) surfaced. v1's harvest carriage seeds (UK £50/pallet, IRE/SCO £65) are the interim per-drop numbers. **14 Oct:** pallet builds now known for 3,203 products via the carton (ruling 7); ~3,450 (mostly sheets) still need one (R15). **15 Oct (Lewys):** agreed — PlasPac rate cards + ~15% delivery margin; the 4.5% pot also covers storage, dispatch, rebates and charged shipments | Seth → PlasPac tariff |
@@ -229,7 +259,9 @@ must be resolved (owner named) before the affected family cuts over:
 | R13 | Oblong RF blank rule: evidenced from 65 historic BOMs (along-web = D2 + 2·D3 + 6–8mm trim) and, 14 Oct, the slit width = mother ÷ lanes of (D1 + 2·D3 + ≥10mm) — 49/61 products — but not yet confirmed by production | shipped in the sandbox 13–14 Oct; confirm both and the 10mm minimum | Stuart |
 | R14 | Speeds from Access (die rated cycles, work-centre defaults, routing run factors) are unreliable — WBIG03's 6-7REEL die said 4/min, now 12 | every imported speed starts **unverified** (confidence system); verify machine by machine; route recommendations show the speed they rest on | Stuart / production |
 | R15 | Pallet builds missing for ~3,450 products (no carton build — mostly sheets) | ask production / PlasPac for those only, not the whole range | Seth / production |
-| R16 | 8RF dismantled; 26 Access order notes and historic routings/dies still name it | retire 8REEL; migrate dies, routings and notes to 10REEL at import | Seth / Stuart |
+| R16 | 8RF dismantled; 26 Access order notes and historic routings/dies still name it | retire 8REEL; migrate dies, routings and notes to 10REEL at import. **23 Oct:** VP-16 decommissioned too (46 Access dies fit only VP-16) — historical, never routable (ruling 27); what replaces it on the sheet-fed route is open | Seth / Stuart |
+| R17 | Engineer make-ready premium: legacy rows add £29.50 engineer to the set-up rate (ZHEN-SP-15, MUF wrappers, VP6-H, cups, ÉCLAR) | **double counts** — engineering is inside the hourly rate (ruling 22); set-up costed at the machine rate | Seth (sandbox Settings decision) |
+| R18 | Machine-rate drivers: Lewys's budget (£1.922M, 28 lines × recovery type) is known; the per-machine drivers (m², running hours, kWh, crew, history split) are not | requested; rates become a calculation in calibration (ruling 25); rebuild waits on the redundancy costs | Lewys |
 
 ## 5. What migrates from where
 
@@ -247,7 +279,12 @@ Draft, with notes), `route-move.ts` (machine → route; product vs route inputs)
 and oblong-slit rules in `estimate-checks.ts` / `production-rules.ts` (`reelHeads`,
 `OBLONG_SLIT_MIN_SPARE_MM`), `quote-workings-screen.ts` (the screen-order internal blueprint), and
 the extract's new fields — `carton` + pallet build, `packQty`, `material.printType`,
-`material.motherCode`, `orderNotes`.
+`material.motherCode`, `orderNotes`. **Added 23–26 Oct:** `tools-filter.ts` (Tools list filtering incl. a
+missing-data enrichment worklist), `tools-import.ts` (merge a low-confidence die list without duplicating
+covered sizes; report probable second dies), the reference-tool gate in `findDieMatches` and the
+`die-reference` / `machine-decommissioned` checks, `DECOMMISSIONED_MACHINES`, the S9 extract
+(`crimped-catalogue.json` + its script), and the workbook-attribution method (baseline → current one
+change at a time, deltas summing exactly) as the shape for parallel-running drift explanations.
 
 **From ERP v1**: the schema designs (§4); route candidacy + comparison + override recording;
 confidence/calibration; the permissions model; the pricing-brief machinery (designed-for);
