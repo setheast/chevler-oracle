@@ -204,6 +204,16 @@ Write-up: `docs/sandbox-handovers/2026-10-27.md`; detail in the sandbox's `produ
     - A new product's packing is a suggestion with a certainty: recorded standards first, then history by size + grade/gsm + machine group.
 35. **Packing Standards are master data with source + confidence:** who said it, when, Confirmed (beats history, 100%) or Provisional (with its own certainty %) — doctrine 1 applied to packing (R21).
 36. **Every proposed Standard shows how sure it is.** A % only where it's computed from frequency; otherwise a level — Confirmed (named ruling / measurement), Evidenced (our data, unconfirmed), Assumed (default). Never a made-up %. Displayed in the flow and printed on the blueprint (doctrine 3).
+37. **The print press is a costed route decision** (Stuart, S11).
+    - Narrow Reeler + stereo (~£250/colour, one per colour) vs Wide Reeler + cylinder (~£1,250/colour); a solid print needs a cylinder.
+    - Narrow max 526mm, 516 stocked; a wider mother is slit to equal pieces first (a charged Slitter pass); stereo lanes are equal.
+    - Choose the cheapest all-in, origination included, at the quoted quantities (51×38 kraft: narrow to ~700k–1m).
+    - Press time is costed on the press WEB. Origination is a per-press, per-colour item with an "already held" state per design → a Print Tools register (seed: Access `TblPrintTools`).
+38. **Every conversion pass is costed on time × rate, never a flat £/kg** — flat rates mis-rank routes (the Slitter's £0.41/kg is ~10× its press-time cost; R22).
+39. **Seth's operating model:**
+    - The user enters size, material, print, quantity; the system decides former, press, layout, packing and origination as Stuart does, recording each decision with its certainty on the blueprint.
+    - The detailed fields live in an **Admin mode**.
+    - **Production rules are admin-maintained, audited parameters**, so knowledge from production conversations is entered without a release (Packing Standards are the first).
 
 ## 3. One cost engine
 
@@ -284,6 +294,7 @@ must be resolved (owner named) before the affected family cuts over:
 | R19 | Slitting tolerance (3mm over nominal) and the 5% offcut flag — seeded from the Access record, not confirmed by production; and whether RF2 is the preferred former among 1–5REEL for single-head work | seeded, flagged (rulings 30–31) | Hannah / Stuart |
 | R20 | Saved products and historic quotes carry no slit-lane count, so they re-price without the offcut (sandbox: missing = legacy); products on a reel that doesn't divide need re-saving | migrate with lanes computed from mother + slit width, flagged for review | Seth |
 | R21 | Packing standards: almost none recorded; history-weighted suggestions are reliable only where one machine group has a house standard (e.g. 10RF 660 / 19,800); weighting by sales units (91%) vs order counts (74%) to decide | collect from production (Hannah first: does RF2 pack 51×38 to 660 / 19,800?); decide the weighting | Seth / Hannah |
+| R22 | Slitter rate: workbook flat £0.41/kg vs ~£0.04/kg on press time (400 m/min, SLITT £45.18/hr) — decides narrow vs wide on close calls and likely over-prices plain reel-fed slitting | Slitter's real speed (Stuart) + rate (Lewys); cost on time × rate | Seth / Stuart / Lewys |
 
 ## 5. What migrates from where
 
@@ -313,7 +324,9 @@ change at a time, deltas summing exactly) as the shape for parallel-running drif
 (maths only — Oracle's engine owns its own), and `cases-material-lines.ts` (stock-line labels,
 first-match vs pinned resolution, mill-reel → mother width). Also 27 Oct: `packing-suggest.ts` (`suggestPacking`,
 `validatePackingStandards`), `packingMachineGroup` + `PACKING_AUTOFILL_MIN`, the certainty-level
-functions in `estimate-checks.ts`, and `CertaintyBadge` (ui-kit) as the shape of a certainty display.
+functions in `estimate-checks.ts`, and `CertaintyBadge` (ui-kit) as the shape of a certainty display. Also 27 Oct: `print-route.ts`
+(`printRouteOptions`, `comparePrintRoutes`, `allInColumns`, `currentPrintRoute`), the narrow-reeler rules
+in `production-rules.ts`, and the engine's `pressWebMm` / `preSlit`.
 
 **From ERP v1**: the schema designs (§4); route candidacy + comparison + override recording;
 confidence/calibration; the permissions model; the pricing-brief machinery (designed-for);
