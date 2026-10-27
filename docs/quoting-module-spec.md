@@ -198,6 +198,12 @@ Write-up: `docs/sandbox-handovers/2026-10-27.md`; detail in the sandbox's `produ
     - The line fixes the price (the workbooks priced the first VLOOKUP match) and, for a mill reel, the mother reel width that drives slitting.
     - Labels say what the line is: `102404 63gsm Black Market Paper (1,200 Mill Reel)`, `(525 × 750 Sheet)`, `(285 × 4,000m Slit Reel)`.
 33. **A multi-head die's web width is measured, never derived.** Without it the die can't be compared on mother-reel waste (the 51×38 10REEL 2-up die's 263mm is known only from product BOMs) — R7.
+34. **Packing (nest / sleeve / pack / outer) belongs to the product + route, not the size.**
+    - 51×38 50gsm GP: twin-head reel formers pack 20 / 660 / 19,800 (91% of 157m units sold in 2 years); the single-head ones have no standard.
+    - Across all round cases the leading nest differs by machine in 35 of 44 multi-machine combinations; paper colour doesn't matter, grade + gsm do.
+    - A new product's packing is a suggestion with a certainty: recorded standards first, then history by size + grade/gsm + machine group.
+35. **Packing Standards are master data with source + confidence:** who said it, when, Confirmed (beats history, 100%) or Provisional (with its own certainty %) — doctrine 1 applied to packing (R21).
+36. **Every proposed Standard shows how sure it is.** A % only where it's computed from frequency; otherwise a level — Confirmed (named ruling / measurement), Evidenced (our data, unconfirmed), Assumed (default). Never a made-up %. Displayed in the flow and printed on the blueprint (doctrine 3).
 
 ## 3. One cost engine
 
@@ -277,6 +283,7 @@ must be resolved (owner named) before the affected family cuts over:
 | R18 | Machine-rate drivers: Lewys's budget (£1.922M, 28 lines × recovery type) is known; the per-machine drivers (m², running hours, kWh, crew, history split) are not | requested; rates become a calculation in calibration (ruling 25); rebuild waits on the redundancy costs | Lewys |
 | R19 | Slitting tolerance (3mm over nominal) and the 5% offcut flag — seeded from the Access record, not confirmed by production; and whether RF2 is the preferred former among 1–5REEL for single-head work | seeded, flagged (rulings 30–31) | Hannah / Stuart |
 | R20 | Saved products and historic quotes carry no slit-lane count, so they re-price without the offcut (sandbox: missing = legacy); products on a reel that doesn't divide need re-saving | migrate with lanes computed from mother + slit width, flagged for review | Seth |
+| R21 | Packing standards: almost none recorded; history-weighted suggestions are reliable only where one machine group has a house standard (e.g. 10RF 660 / 19,800); weighting by sales units (91%) vs order counts (74%) to decide | collect from production (Hannah first: does RF2 pack 51×38 to 660 / 19,800?); decide the weighting | Seth / Hannah |
 
 ## 5. What migrates from where
 
@@ -304,7 +311,9 @@ change at a time, deltas summing exactly) as the shape for parallel-running drif
 (`estimate-checks.ts`), `SLIT_OVERWIDTH_TOLERANCE_MM` / `OFFCUT_FLAG_PCT` / `REEL_FORMER`
 (`production-rules.ts`), the offcut build-up line + stock-line pricing in `engines/cases/shared.ts`
 (maths only — Oracle's engine owns its own), and `cases-material-lines.ts` (stock-line labels,
-first-match vs pinned resolution, mill-reel → mother width).
+first-match vs pinned resolution, mill-reel → mother width). Also 27 Oct: `packing-suggest.ts` (`suggestPacking`,
+`validatePackingStandards`), `packingMachineGroup` + `PACKING_AUTOFILL_MIN`, the certainty-level
+functions in `estimate-checks.ts`, and `CertaintyBadge` (ui-kit) as the shape of a certainty display.
 
 **From ERP v1**: the schema designs (§4); route candidacy + comparison + override recording;
 confidence/calibration; the permissions model; the pricing-brief machinery (designed-for);
