@@ -186,6 +186,19 @@ Write-up: `docs/sandbox-handovers/2026-10-26.md`; detail in the sandbox's `produ
     (today's on-premises server provides both). One estimator, one source of truth replacing Access
     + Excel + the three calculators.
 
+**Post-founding rulings (27 Oct 2026 — Hannah, Operations Manager, via Seth; binding here).**
+Write-up: `docs/sandbox-handovers/2026-10-27.md`; detail in the sandbox's `production-knowledge.md` §22.
+
+30. **The whole mother reel consumed is costed, and it decides the reel-fed route.**
+    - **The case (Hannah):** 51 × 38 round cases in GP Kraft 50 go on RF2 (single head), not 10RF (twin head). Kraft comes only as a 960mm mother reel; 10RF's 263mm web cuts 3 from it, leaving 171mm (17.8%) offcut. The 1–5REEL die cuts 7 × 137mm lanes (0.1%).
+    - **The rule:** route costing charges material + ink + conversion on the offcut too, because the full mother runs through the press/slitter. Otherwise twin-head routes look cheaper than they are on a reel that doesn't divide.
+    - On white GP the 1050 reel slits 4 × 263 cleanly, so the same product is right on 10RF.
+31. **Slitting tolerance is a calibration parameter.** Lanes = floor((mother + tolerance) ÷ slit width), with the tolerance seeded at 3mm from Access: 132 of 1,161 reel products are slit 1–3mm over nominal, and the median offcut is 0%. Offcut above a flag share (seeded 5%) triggers a search for a cleaner-slitting die on a running former (R19).
+32. **A quote's material is a stock line (Materials row), never a name + gsm key.**
+    - The line fixes the price (the workbooks priced the first VLOOKUP match) and, for a mill reel, the mother reel width that drives slitting.
+    - Labels say what the line is: `102404 63gsm Black Market Paper (1,200 Mill Reel)`, `(525 × 750 Sheet)`, `(285 × 4,000m Slit Reel)`.
+33. **A multi-head die's web width is measured, never derived.** Without it the die can't be compared on mother-reel waste (the 51×38 10REEL 2-up die's 263mm is known only from product BOMs) — R7.
+
 ## 3. One cost engine
 
 A pure, tested, zero-I/O module (`engine/` — the sandbox discipline: no Express, no fs, no Date,
@@ -249,8 +262,8 @@ must be resolved (owner named) before the affected family cuts over:
 | R3 | Base labour £19.33 (S7, Mar) vs £20.29 (Lewys, Oct) | **RESOLVED 15 Oct: £20.29** (other grades £25.69/£23.91 to confirm) | Lewys |
 | R4 | Efficiency/productivity: 85% assumed vs ~70% observed (v1's OI-1) — and S7's hours assume 85% | adopt v1's `productivity_factor` design; seed from the baseline exercise. **15 Oct (Lewys):** ONE efficiency per machine, from the productivity reports/timesheets (9 months; 10RF ≈ 93%) — replaces both the 85% and the quotes' 75% | Hannah extract → Lewys validate (v1's procedure docs) |
 | R5 | Overhead pots: v1 profile (labour £117,467 / 80,000kg / admin 15.5%) vs sandbox factory params vs S7 pots | rebase from S7 + current accounts at founding; versioned profile | Lewys |
-| R6 | Material prices 539 days old in v1; sandbox catalogue has reconciliation candidates | refresh at founding; dated prices mandatory thereafter. **13 Oct:** mill reels also need live/dormant/obsolete status from the stock file — SP 90's historic 1040mm mother is OBSOLETE, the live buy is the 1065mm FSC line; one price-list row per grade hides this | Lewys/purchasing |
-| R7 | Die data: S8 register (385 dies, rated speeds, feed waste, heads) vs v1 harvest tooling-cases.json (612 sizes, 601 unlinked die refs) | S8 is primary; harvest fills gaps; measured webs still to collect. **23 Oct:** S9 = Stuart's 2013 crimped-case catalogue (491 sizes, no die refs/heads/speeds) imported in the sandbox as reference-only dies (ruling 28) — 325 new sizes + 17 probable second dies on another machine family; conflicts and conditions (lost / toothless / cannibalised / not commissioned) with Stuart | Tim (register owner); Stuart (S9 questions) |
+| R6 | Material prices 539 days old in v1; sandbox catalogue has reconciliation candidates | refresh at founding; dated prices mandatory thereafter. **13 Oct:** mill reels also need live/dormant/obsolete status from the stock file — SP 90's historic 1040mm mother is OBSOLETE, the live buy is the 1065mm FSC line; one price-list row per grade hides this. **27 Oct:** the sandbox's Cases material list is the workbook's 13 Aug snapshot, not the stock file (GP Kraft 50 has one line, 101759 at 960mm; AX312's 526mm kraft reel is dormant) — Oracle's Materials come from the stock file with status, and quotes pick a stock line (ruling 32) | Lewys/purchasing |
+| R7 | Die data: S8 register (385 dies, rated speeds, feed waste, heads) vs v1 harvest tooling-cases.json (612 sizes, 601 unlinked die refs) | S8 is primary; harvest fills gaps; measured webs still to collect. **23 Oct:** S9 = Stuart's 2013 crimped-case catalogue (491 sizes, no die refs/heads/speeds) imported in the sandbox as reference-only dies (ruling 28) — 325 new sizes + 17 probable second dies on another machine family; conflicts and conditions (lost / toothless / cannibalised / not commissioned) with Stuart. **27 Oct:** measured webs on multi-head dies are now needed for route choice (ruling 33) — first: 51x38 10REEL 2-up = 263mm | Tim (register owner); Stuart (S9 questions) |
 | R8 | Speeds: die RATED vs Stuart's quoting bands | rated = Standard, bands warn (decided 12 Oct) — bands maintained as production rules. **14 Oct:** rated speeds from Access proved unreliable (R14) — rated stays a Standard only once verified | Stuart |
 | R9 | CHEVS ×(2÷1.5) template quirk vs S7 rate (~12% if it only means crew) | **RESOLVED 15 Oct (Lewys): the uplift is real crew** — one packer serves three Chevlers; Oracle's explicit CHEVS crew includes it (the quirk itself is not carried) | Lewys/Stuart |
 | R10 | Delivery: flat % vs real fulfilment | §11 architecture native; % interim. **13 Oct — call-off orders are a first-class case** (e.g. 1m/year over ~6 drops, common): a flat % cannot see the drop count, so delivery must price drops × (pallets/drop × zone rate) + storage dwell, with the batching question (one run + storage vs several runs + set-ups) surfaced. v1's harvest carriage seeds (UK £50/pallet, IRE/SCO £65) are the interim per-drop numbers. **14 Oct:** pallet builds now known for 3,203 products via the carton (ruling 7); ~3,450 (mostly sheets) still need one (R15). **15 Oct (Lewys):** agreed — PlasPac rate cards + ~15% delivery margin; the 4.5% pot also covers storage, dispatch, rebates and charged shipments | Seth → PlasPac tariff |
@@ -262,6 +275,8 @@ must be resolved (owner named) before the affected family cuts over:
 | R16 | 8RF dismantled; 26 Access order notes and historic routings/dies still name it | retire 8REEL; migrate dies, routings and notes to 10REEL at import. **23 Oct:** VP-16 decommissioned too (46 Access dies fit only VP-16) — historical, never routable (ruling 27); what replaces it on the sheet-fed route is open | Seth / Stuart |
 | R17 | Engineer make-ready premium: legacy rows add £29.50 engineer to the set-up rate (ZHEN-SP-15, MUF wrappers, VP6-H, cups, ÉCLAR) | **double counts** — engineering is inside the hourly rate (ruling 22); set-up costed at the machine rate | Seth (sandbox Settings decision) |
 | R18 | Machine-rate drivers: Lewys's budget (£1.922M, 28 lines × recovery type) is known; the per-machine drivers (m², running hours, kWh, crew, history split) are not | requested; rates become a calculation in calibration (ruling 25); rebuild waits on the redundancy costs | Lewys |
+| R19 | Slitting tolerance (3mm over nominal) and the 5% offcut flag — seeded from the Access record, not confirmed by production; and whether RF2 is the preferred former among 1–5REEL for single-head work | seeded, flagged (rulings 30–31) | Hannah / Stuart |
+| R20 | Saved products and historic quotes carry no slit-lane count, so they re-price without the offcut (sandbox: missing = legacy); products on a reel that doesn't divide need re-saving | migrate with lanes computed from mother + slit width, flagged for review | Seth |
 
 ## 5. What migrates from where
 
@@ -285,6 +300,11 @@ covered sizes; report probable second dies), the reference-tool gate in `findDie
 `die-reference` / `machine-decommissioned` checks, `DECOMMISSIONED_MACHINES`, the S9 extract
 (`crimped-catalogue.json` + its script), and the workbook-attribution method (baseline → current one
 change at a time, deltas summing exactly) as the shape for parallel-running drift explanations.
+**Added 27 Oct:** `slitLayout` + `lowerWasteRoutes` and the `mother-offcut` / `offcut-route` checks
+(`estimate-checks.ts`), `SLIT_OVERWIDTH_TOLERANCE_MM` / `OFFCUT_FLAG_PCT` / `REEL_FORMER`
+(`production-rules.ts`), the offcut build-up line + stock-line pricing in `engines/cases/shared.ts`
+(maths only — Oracle's engine owns its own), and `cases-material-lines.ts` (stock-line labels,
+first-match vs pinned resolution, mill-reel → mother width).
 
 **From ERP v1**: the schema designs (§4); route candidacy + comparison + override recording;
 confidence/calibration; the permissions model; the pricing-brief machinery (designed-for);
