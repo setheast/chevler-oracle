@@ -214,6 +214,11 @@ Write-up: `docs/sandbox-handovers/2026-10-27.md`; detail in the sandbox's `produ
     - The user enters size, material, print, quantity; the system decides former, press, layout, packing and origination as Stuart does, recording each decision with its certainty on the blueprint.
     - The detailed fields live in an **Admin mode**.
     - **Production rules are admin-maintained, audited parameters**, so knowledge from production conversations is entered without a release (Packing Standards are the first).
+40. **The system chooses the route — machine × press × layout.**
+    - Every running former with a ready die for the size is combined with each press/layout, priced all-in at every quantity through the one engine. The cheapest at the most quantities is applied; every alternative is recorded with its price or the reason it was excluded.
+    - Sandbox: Reel Fed (2RF vs 10RF; 51×38 kraft → a single-head former on the narrow reeler).
+41. **Confirmed beats evidenced for Standards.** A confirmed production rule (Stuart's speed band) overrides unverified imported data (an Access die's rated speed) when that data is higher, and both are shown. An unmeasured twin-head die web is evidenced from product history until measured.
+42. **A blank input never prices as free.** Required inputs are enforced before pricing (a blank nest priced the machine at £0 in the sandbox), and a zero-cost machine is an error.
 
 ## 3. One cost engine
 
@@ -295,6 +300,7 @@ must be resolved (owner named) before the affected family cuts over:
 | R20 | Saved products and historic quotes carry no slit-lane count, so they re-price without the offcut (sandbox: missing = legacy); products on a reel that doesn't divide need re-saving | migrate with lanes computed from mother + slit width, flagged for review | Seth |
 | R21 | Packing standards: almost none recorded; history-weighted suggestions are reliable only where one machine group has a house standard (e.g. 10RF 660 / 19,800); weighting by sales units (91%) vs order counts (74%) to decide | collect from production (Hannah first: does RF2 pack 51×38 to 660 / 19,800?); decide the weighting | Seth / Hannah |
 | R22 | Slitter rate: workbook flat £0.41/kg vs ~£0.04/kg on press time (400 m/min, SLITT £45.18/hr) — decides narrow vs wide on close calls and likely over-prices plain reel-fed slitting | Slitter's real speed (Stuart) + rate (Lewys); cost on time × rate | Seth / Stuart / Lewys |
+| R23 | Machine selection pools: machines in a group (RF 1–5) compete on measured efficiency; production picks whichever is free | decide pooling vs per-machine, and when capacity/availability enters (planning stage) | Seth / production |
 
 ## 5. What migrates from where
 
@@ -326,7 +332,8 @@ first-match vs pinned resolution, mill-reel → mother width). Also 27 Oct: `pac
 `validatePackingStandards`), `packingMachineGroup` + `PACKING_AUTOFILL_MIN`, the certainty-level
 functions in `estimate-checks.ts`, and `CertaintyBadge` (ui-kit) as the shape of a certainty display. Also 27 Oct: `print-route.ts`
 (`printRouteOptions`, `comparePrintRoutes`, `allInColumns`, `currentPrintRoute`), the narrow-reeler rules
-in `production-rules.ts`, and the engine's `pressWebMm` / `preSlit`.
+in `production-rules.ts`, and the engine's `pressWebMm` / `preSlit`. Also: `route-optimiser.ts` (`routeCandidates`,
+`historicWeb`, `currentRoute`) and `standardCycle(prim, params, inputs)` / `reelBandCap`.
 
 **From ERP v1**: the schema designs (§4); route candidacy + comparison + override recording;
 confidence/calibration; the permissions model; the pricing-brief machinery (designed-for);
