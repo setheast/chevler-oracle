@@ -223,6 +223,7 @@ Write-up: `docs/sandbox-handovers/2026-10-27.md`; detail in the sandbox's `produ
 
 43. **Print plates by press:** Reel-Sheet and the Narrow Reeler take a stereo or a cylinder; the Wide Reeler a cylinder only. A solid print needs a cylinder (stereo joint line) on any press that takes one, which refines ruling 37. Origination is priced per press × plate × colour; the Print Tools register holds plate type per press, and each job records the plate chosen.
 44. **An un-costed option is never compared as free:** a route whose plate (or any input to its cost) has no price is excluded from the comparison, with the reason, until the price is set.
+45. **Litho plates:** the Litho Printer takes a plate, £50 per colour (Seth, 28 Oct 2026). Print Tools plate types are stereo / cylinder / plate. Reconcile with the Ecoluxe calculator's existing origination charge before porting litho (R24).
 
 ## 3. One cost engine
 
@@ -305,6 +306,7 @@ must be resolved (owner named) before the affected family cuts over:
 | R21 | Packing standards: almost none recorded; history-weighted suggestions are reliable only where one machine group has a house standard (e.g. 10RF 660 / 19,800); weighting by sales units (91%) vs order counts (74%) to decide | collect from production (Hannah first: does RF2 pack 51×38 to 660 / 19,800?); decide the weighting | Seth / Hannah |
 | R22 | Slitter rate: workbook flat £0.41/kg vs ~£0.04/kg on press time (400 m/min, SLITT £45.18/hr) — decides narrow vs wide on close calls and likely over-prices plain reel-fed slitting | Slitter's real speed (Stuart) + rate (Lewys); cost on time × rate | Seth / Stuart / Lewys |
 | R23 | Machine selection pools: machines in a group (RF 1–5) compete on measured efficiency; production picks whichever is free | decide pooling vs per-machine, and when capacity/availability enters (planning stage) | Seth / production |
+| R24 | Litho origination: the sandbox provision (£50 per plate per colour) vs the Ecoluxe calculator's own "origination" charge in its Live Calc parameters — same concept? | reconcile before porting litho quoting | Seth |
 
 ## 5. What migrates from where
 
