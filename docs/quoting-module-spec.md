@@ -219,6 +219,10 @@ Write-up: `docs/sandbox-handovers/2026-10-27.md`; detail in the sandbox's `produ
     - Sandbox: Reel Fed (2RF vs 10RF; 51×38 kraft → a single-head former on the narrow reeler).
 41. **Confirmed beats evidenced for Standards.** A confirmed production rule (Stuart's speed band) overrides unverified imported data (an Access die's rated speed) when that data is higher, and both are shown. An unmeasured twin-head die web is evidenced from product history until measured.
 42. **A blank input never prices as free.** Required inputs are enforced before pricing (a blank nest priced the machine at £0 in the sandbox), and a zero-cost machine is an error.
+**Post-founding rulings (28 Oct 2026 — Seth; binding here).** Write-up: `docs/sandbox-handovers/2026-10-28.md`; sandbox `production-knowledge.md` §26.
+
+43. **Print plates by press:** Reel-Sheet and the Narrow Reeler take a stereo or a cylinder; the Wide Reeler a cylinder only. A solid print needs a cylinder (stereo joint line) on any press that takes one, which refines ruling 37. Origination is priced per press × plate × colour; the Print Tools register holds plate type per press, and each job records the plate chosen.
+44. **An un-costed option is never compared as free:** a route whose plate (or any input to its cost) has no price is excluded from the comparison, with the reason, until the price is set.
 
 ## 3. One cost engine
 
@@ -333,7 +337,7 @@ first-match vs pinned resolution, mill-reel → mother width). Also 27 Oct: `pac
 functions in `estimate-checks.ts`, and `CertaintyBadge` (ui-kit) as the shape of a certainty display. Also 27 Oct: `print-route.ts`
 (`printRouteOptions`, `comparePrintRoutes`, `allInColumns`, `currentPrintRoute`), the narrow-reeler rules
 in `production-rules.ts`, and the engine's `pressWebMm` / `preSlit`. Also: `route-optimiser.ts` (`routeCandidates`,
-`historicWeb`, `currentRoute`) and `standardCycle(prim, params, inputs)` / `reelBandCap`.
+`historicWeb`, `currentRoute`) and `standardCycle(prim, params, inputs)` / `reelBandCap`. Also 28 Oct: `origination.ts` (`PRESS_PLATES`, `defaultPlate`, `plateCostPerColour`, `normaliseOrigination`).
 
 **From ERP v1**: the schema designs (§4); route candidacy + comparison + override recording;
 confidence/calibration; the permissions model; the pricing-brief machinery (designed-for);
