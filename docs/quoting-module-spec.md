@@ -227,6 +227,7 @@ Write-up: `docs/sandbox-handovers/2026-10-27.md`; detail in the sandbox's `produ
 46. **A printed white job uses GP Opaque** (Stuart, 28 Oct 2026; sandbox §27). A material rule — print type × colour → material grade — applied by the assumption engine when the paper is chosen and shown with its certainty. Plain white GP is still bought for unprinted work.
 47. **Pack quantities on a customer quote only when certain:** from a Confirmed packing standard or the product record (a job run before, or the same packing as something the customer already buys). Suggestions stay internal; an estimate is given on request.
 48. **Speed bands have a small-blank end:** speed standards are per machine group × blank band, maintained by production (a 31 × 23, 83mm blank, runs ~60–70/min against the 55 band for blanks to 100mm). R14/R8 still apply.
+   - *Sandbox build (28 Oct 2026):* rulings 46–48 are built in the sandbox. The paper swap is automatic with an undo and is recorded per quote. The packing bar is a setting (seed 90%); 100% comes from packing as run on a product, a Confirmed standard or the estimator's confirmation with a note, and the decision is stored on the quote. Each speed band carries a status: a provisional band (to 85mm → 60) is Evidenced, and only confirmed ceilings block. "Customer already buys this packing" should come from customer-linked product history in Oracle, not a tick.
 
 ## 3. One cost engine
 
