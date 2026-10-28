@@ -224,6 +224,9 @@ Write-up: `docs/sandbox-handovers/2026-10-27.md`; detail in the sandbox's `produ
 43. **Print plates by press:** Reel-Sheet and the Narrow Reeler take a stereo or a cylinder; the Wide Reeler a cylinder only. A solid print needs a cylinder (stereo joint line) on any press that takes one, which refines ruling 37. Origination is priced per press × plate × colour; the Print Tools register holds plate type per press, and each job records the plate chosen.
 44. **An un-costed option is never compared as free:** a route whose plate (or any input to its cost) has no price is excluded from the comparison, with the reason, until the price is set.
 45. **Litho plates:** the Litho Printer takes a plate, £50 per colour (Seth, 28 Oct 2026). Print Tools plate types are stereo / cylinder / plate. Reconcile with the Ecoluxe calculator's existing origination charge before porting litho (R24).
+46. **A printed white job uses GP Opaque** (Stuart, 28 Oct 2026; sandbox §27). A material rule — print type × colour → material grade — applied by the assumption engine when the paper is chosen and shown with its certainty. Plain white GP is still bought for unprinted work.
+47. **Pack quantities on a customer quote only when certain:** from a Confirmed packing standard or the product record (a job run before, or the same packing as something the customer already buys). Suggestions stay internal; an estimate is given on request.
+48. **Speed bands have a small-blank end:** speed standards are per machine group × blank band, maintained by production (a 31 × 23, 83mm blank, runs ~60–70/min against the 55 band for blanks to 100mm). R14/R8 still apply.
 
 ## 3. One cost engine
 
