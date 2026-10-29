@@ -230,6 +230,12 @@ Write-up: `docs/sandbox-handovers/2026-10-27.md`; detail in the sandbox's `produ
    - *Sandbox build (28 Oct 2026):* rulings 46–48 are built in the sandbox. The paper swap is automatic with an undo and is recorded per quote. The packing bar is a setting (seed 90%); 100% comes from packing as run on a product, a Confirmed standard or the estimator's confirmation with a note, and the decision is stored on the quote. Each speed band carries a status: a provisional band (to 85mm → 60) is Evidenced, and only confirmed ceilings block. "Customer already buys this packing" should come from customer-linked product history in Oracle, not a tick.
 49. **The route optimiser tries every reel of the paper, and a reel at the die's width runs as bought** (Seth, 28 Oct 2026; sandbox §28 — YF944 runs 9REEL off a 285mm reel bought at width, no slitting). A plain reel-fed routing is chosen across every stocked reel of the grade + weight (slit, or no slitting operation at all when the purchased width is the die's web ± 3mm). The recommendation is never dearer than the routing already on the job. A single-head reel may exceed the blank by at most 20% (provisional, Stuart to confirm).
 50. **A plain job never goes through a print press** (Seth, 28 Oct 2026; sandbox §29): plain wraps are reel → sheeter → guillotine → former, plain reels go through the slitter. The conversion step follows the print, not the product family's default routing.
+51. **Delivery is its own quote line; 3PL storage and handling are inside the making price** (Seth + Lewys, 29 Oct 2026; sandbox §30 and hand-over 2026-10-29).
+    - The per-1,000 is the making price: the old 4.5% carriage is out, and 3PL storage (pallet spaces × weeks × rate), RH&D (once per pallet, in and out) and picking (boxes broken out for split deliveries) are in, for collected jobs too.
+    - The delivery line = the job's pallets × the dated 3PL rate for the postcode zone and service + the delivery margin (15%).
+    - Rates (delivery cards, handling) carry effective dates. A changeover switch, Current (the %) / New (the line), shows both.
+    - The rest of the old 4.5% (rebates, customs, consumables) needs its own home.
+    - Every actual delivery must be recorded against its job.
 
 ## 3. One cost engine
 
