@@ -24,6 +24,13 @@ The founding documents ARE the requirements — read them before proposing anyth
    the work it describes — that discipline is inherited from ERP v1 and is why its project log
    rotted and its roadmap didn't.
 
+## Skills (`.claude/skills/`, added 3 Nov 2026)
+Five skills copied from mattpocock/skills (details and local edits in `.claude/skills/README.md`):
+`grill-me` / `grilling` for decision sessions, `domain-modeling` for `GLOSSARY.md` + `docs/adr/`
+(ADRs = architecture only; production rulings stay in the spec's register), `codebase-design` for
+the design vocabulary, `tdd` for red → green against the spec §3 engine stages. Read `GLOSSARY.md`
+once it exists and use its terms.
+
 ## The three sibling sources (read-only from here)
 | Where | What it is | Rule |
 |---|---|---|
