@@ -49,8 +49,9 @@ reference planes, each owned, audited and editable in one place:
 | Machines & Rates | capabilities (process, output, widths, colours), hourly rates, run standards with confidence + productivity factor, multi-machine standards | S7 carriage-stripped rates; S8 standards; v1's confidence/calibration design |
 | Tools & Dies | the die register: dims, heads, rated speed, feed waste, machine compatibility, measured webs | S8 register (385 dies) merged with v1 harvest (612 case sizes, 601 die refs) |
 | Parameters | overhead pots, margins, waste factors, delivery options, FX — versioned, audited | sandbox stores + v1 overhead profiles, reconciled per the spec §4 |
+| Sales History | invoiced sales lines (Sage) since Jan 2019 — customer, product, date, qty / packs / units, net £, credits netted; curated customer types | the Sales Explorer dataset; Seth uploads Excel / Access / Sage files until Oracle is live (added 4 Nov 2026) |
 
-Reporting, dashboards and planning views sit *over* the spine; they are projections, never inputs.
+Reporting, dashboards and planning views sit *over* the spine; they are projections, never inputs. The first required one is the **Sales Explorer** (Seth, 4 Nov 2026): explorer, watchlist, customer types, budget and quote-helper views over the sales history — and quoting reads the same plane for a customer's previous prices (spec ruling 67).
 
 ## The front door: a command bar
 

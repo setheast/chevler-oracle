@@ -41,7 +41,7 @@ code, dims, material, gsm, quantity); everything it understood is shown and edit
 
 | Step | Question | Auto-completion sources | Checks (examples) |
 |---|---|---|---|
-| **0. Who & what history** | Customer (tier, contracts, currency), or anonymous. Repeat? | saved products, quote/job history, similar-products routing history (S8) | stale-price flag on re-quote; Draft/Do-Not-Use spec status |
+| **0. Who & what history** | Customer (tier, contracts, currency), or anonymous. Repeat? | **invoiced sales history (last / current price paid, volumes, frequency — ruling 67)**, saved products, quote/job history, similar-products routing history (S8) | stale-price flag on re-quote; Draft/Do-Not-Use spec status |
 | **1. Product family** | Printed Sheets · Sheets · Reels · Discs/Ovals · Wraps · Cases · Liners | — (one click or parsed) | family quotable? (rates signed off) |
 | **2. Size & material** | dims; grade = type + gsm + colour | material catalogue (grade→widths→dated preferred price); blank/flat-blank guides | no priced width; gsm outside machine envelope; stale price |
 | **3. Tool** | needed? have one? | **die auto-fit** from the register (dims → die, either orientation); nearest dies + "what jobs ran them" when no exact; new-tool amortisation when none | tool-lane-width; tool drift vs register; heads vs machine class |
@@ -254,6 +254,7 @@ Write-up: `docs/sandbox-handovers/2026-10-27.md`; detail in the sandbox's `produ
 64. **Currency while pricing:** pricing viewable in £ / $ / € at the exact rate the quote will snapshot; GBP the price of record. Forward contracts priced in € (Woodland, delivery Jul 2027) need a price-hold and currency-of-record policy (R29).
 65. **Trunking from the factory to the 3PL is a cost of the goods** that the delivery-line model must carry (per pallet, in the fulfilment cost) — not yet costed (R26).
 66. **3PL dwell is per job / product type, not one default** — forward-dated contract stock can sit months (R27).
+67. **Invoiced sales history is reference data, and the Sales Explorer is a required view** (Seth, 4 Nov 2026 — "golden for day to day referencing"; hand-over addendum). A **Sales History plane** holds the Sage invoice lines since Jan 2019 (customer, product, date, qty, packs, units, net £, currency, credits netted; read-only, sourced and dated; curated attributes such as customer type are Oracle-owned and audited). **Quote step 0 shows the customer's last / current price paid, volumes and frequency** for the product or similar ones as a reference beside the new quote. The **Sales Explorer** (views: Explorer, Watchlist, Customer types, Budget, Quote helper; by customer / product / category / product details / machine / country / customer type; £ net, packs, units; FY Dec–Nov) becomes a reporting view over the spine. **Until Oracle is live, Seth refreshes it by uploading Excel, Access exports and Sage data**, so Oracle needs an import pipeline: source + period + date + uploader recorded, validated before applying, idempotent (replace by period or merge by invoice number), a what-changed view and rollback; sales data access controlled server-side (R30).
    - *Status (3 Nov):* ERP v1 is unchanged since the 22 Sep snapshot, so the harvest report's re-verification is satisfied. Structure & Routing gaps found in the sandbox (become Oracle engine/data requirements): conversion as a routed step with hours, production sequence, explicit crew, packaging components with stock codes, make-ready spoilage, Main's families.
    - *Deferred to Oracle (Seth, 4 Nov):* a quote-comparison tool — re-price a legacy workbook quote, then walk one field at a time to Oracle's price, landing to 4dp (first case: the 64 × 51 round case).
 
@@ -344,6 +345,7 @@ must be resolved (owner named) before the affected family cuts over:
 | R27 | 3PL dwell assumed 4 weeks; forward-dated contract stock (e.g. Woodland, Jul 2027) could sit ~34 weeks | real dwell by product type / customer; when forward stock is made; pallets-in-store from invoices | Hannah / Lewys |
 | R28 | Punch details: clickers = "swing heads"? does interleaving shrink the travel head's 610 × 1,000? when are 334-sheet lifts used? Reel-Sheet and Sheeter real cut-length limits | collect; then machine-specific fields (ruling 55) | Gaynor Morgan |
 | R29 | Forward contracts in €: price-hold period and currency of record (Woodland 5th contract, delivery 5 Jul 2027 at a fixed € price) | policy needed before quoting forward contracts | Sharon / Seth |
+| R30 | Sales history import: Sage export fields and refresh cadence; Sage stock codes ↔ Access product codes ↔ Oracle products; credit linking; € invoices vs the GBP of record; FY Dec–Nov. Interim: Seth uploads Excel / Access / Sage files until Oracle is live | define the import contract and mapping; build the upload pipeline (ruling 67) | Seth (Lewys for Sage) |
 
 ## 5. What migrates from where
 
