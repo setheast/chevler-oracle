@@ -62,7 +62,14 @@ The primary way in is typing, not navigating:
 - `57x48 chocolate 50 1m` → a new quote, steps 0–2 already answered, die auto-fitted
 - `CHV-2610-0106` → that quote's thread
 
+- `What was Cherry Tree's last order?` / `Produce a quote for Speedibake` → plain-English
+  questions, answered from Oracle's own records (spec ruling 68)
+
 The command bar is not a search feature bolted on — it is the quote wizard's first three steps.
+Codes and sizes parse without AI and work offline; plain-English questions use Claude over
+Oracle's read-only lookups (every figure links to its record; nothing is issued or changed without
+the user) and fall back to the code-and-size search when the internet is down. Oracle as a whole
+must stay usable on site with no internet, losing no more than 2 hours of work (ruling 69).
 Everything we built for the assumption engine (dims→die, similar products, repeat recall) is the
 parser behind it. The collapsible flow remains the full fallback for discoverability: nobody is
 *required* to know the grammar, and the obvious sections (reporting, planning, admin) stay
