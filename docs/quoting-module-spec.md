@@ -295,6 +295,7 @@ Write-up: `docs/sandbox-handovers/2026-10-27.md`; detail in the sandbox's `produ
     - **Production history** ("how we've run similar products") sits inside Route as the evidence for the route.
     - **Each section** has an icon; closed, it shows its key facts as pills and, in red, any input it still needs. Open/closed is remembered per user.
     - Supersedes ruling 94's input order. The right-hand summary, colour roles and detail-behind-a-click stand. The guided flow (§2) should follow this order.
+98. **Packing is costed from the pack build by default** (Seth, 11 Nov 2026): the sandbox's new and Access-loaded jobs now default to sleeve & pack quantities (one sleeve per sleeve qty, one carton per pack qty, at their £ each). Before, the default was "by weight" (product kg × an unconfirmed £/kg per template). Recalled jobs keep their basis. Measured effect on five sandbox jobs: −3% to +1% on price. For Oracle, packing is a **bill of packaging components** (sleeve, carton, pallet — each a stock-coded material with a cost) driven by the job's pack build; a £/kg estimate is only a labelled fallback when the build is unknown. A blank component quantity must be flagged, never silently costed at £0 (the sandbox prices it at £0 with a check).
 
 ## 3. One cost engine
 
